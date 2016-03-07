@@ -45,3 +45,8 @@
         - NAT Network
         - Name: NAT Network
 4. Start Machine : Will PXE boot and install Ubuntu onto the disk
+5. Credentials: ubuntu/ubuntu
+
+
+- You can find the PXE boot stuff at /tftpboot and the kickstart at /var/www/my_ks.cfg on the build node
+
