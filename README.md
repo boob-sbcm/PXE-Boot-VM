@@ -36,12 +36,20 @@
 
 1. Create a blank VM
 2. Enable Network Boot
+    
     a. System Settings -> Motherboard -> Boot Order (Check Network)
 3. Update Network Interfaces
+    
     a. Network Settings -> Adapter 1: 
+        
         - Internal Network
+        
         - Name : prov
+    
     b. Network Settings -> Adapter 2:
+        
         - NAT Network
+        
         - Name: NAT Network
+        
 4. Start Machine : Will PXE boot and install Ubuntu onto the disk
