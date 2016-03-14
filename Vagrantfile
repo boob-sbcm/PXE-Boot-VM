@@ -1,6 +1,7 @@
 #If this box is not on your machine, vagrant up base and make that a base box. Then add that to vagrant
 #$box_name = "my_hashicorp_precise32"
 $box_name = "hashicorp/precise32"
+$cent_box = "cent6_minimal"
 
 def small(config)
     config.vm.provider "virtualbox" do |v|
@@ -26,23 +27,22 @@ end
 
 Vagrant.configure(2) do |config|
 
-    config.vm.define "build_boot", autostart: false do |build_boot|
+    config.vm.define "build_master", autostart: false do |build_boot|
         small(config)
-        build_boot.vm.box = $box_name
-        build_boot.vm.hostname = "build-boot"
+        build_boot.vm.box = $cent_box
+        build_boot.vm.hostname = "gemini-build-master"
         build_boot.vm.network "private_network", ip: "192.168.2.2", virtualbox__intnet: "prov"
-        build_boot.vm.synced_folder "netboot/", "/netboot/" 
         build_boot.vm.provision :shell, path: "provision_scripts/general.sh"
         build_boot.vm.provision :shell, path: "provision_scripts/dhcp.sh"
         build_boot.vm.provision :shell, path: "provision_scripts/tftp.sh"
         build_boot.vm.provision :shell, path: "provision_scripts/apache.sh"
     end
 
-    config.vm.define "boot", autostart: true do |boot|
+    config.vm.define "master", autostart: true do |boot|
         small(config)
 
-        boot.vm.box = "pxe_boot"
-        boot.vm.hostname = "boot"
+        boot.vm.box = "gemini_master"
+        boot.vm.hostname = "master"
         boot.vm.network "private_network", ip: "192.168.2.2", virtualbox__intnet: "prov"
         boot.vm.synced_folder "netboot/", "/netboot/" 
     end

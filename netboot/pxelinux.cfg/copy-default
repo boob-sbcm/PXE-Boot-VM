@@ -1,6 +1,0 @@
-# D-I config version 2.0
-include ubuntu-installer/i386/boot-screens/menu.cfg
-default ubuntu-installer/i386/boot-screens/vesamenu.c32
-append ks=http://192.168.2.2/ks.cfg vga=normal initrd=ubuntu-installer/i386/initrd.gz
-prompt 0
-timeout 0

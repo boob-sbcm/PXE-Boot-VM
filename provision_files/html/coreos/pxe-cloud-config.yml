@@ -1,0 +1,20 @@
+#cloud-config
+write_files:
+ - path: /etc/profile.d/opt-path.sh
+   owner: root
+   permissions: 0755
+   content: |
+     #! /usr/bin/bash
+     PATH=$PATH/opt/bin
+ - path: /etc/profile.d/proxy.sh
+   owner: root
+   permissions: 0644
+   content: |
+    export http_proxy=http://10.225.211.250:9999/
+    export https_proxy=http://10.225.211.250:9999/
+    export HTTP_PROXY=http://10.225.211.250:9999/
+    export HTTPS_PROXY=http://10.225.211.250:9999/
+    export no_proxy="127.0.0.1, localhost, 10.225.211.250"
+    export NO_PROXY="127.0.0.1, localhost, 10.225.211.250"
+ssh_authorized_keys:
+ - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAotq1dXZ6ATcGNRgbUmy+dUO23iXVBQPN0xXht0cTDHPcvaqspzKWM4ZHs0jaC5fQIA1KvxNpu5PIIp12AEq8dyXwNuq3CUE8MjHzbvRVGiLBVFfsRx6vcc+pUrAOBf7osZl3uTdScn68Bgz8PUSIZJTdo+LgVSwlVkjiuEDsn6tVhHjU5GkZXG3VhR9Qn/S41adzUoYByI+DC7u9h6eyT9wurg2FACrkfiTWrLyjzmfVHBwWzmU9uvyEIkZyPVeUA0aDMD3tRJSOWPYWsggg/sTilo2yEMq7esjMvBE/XinKj9YxqKUYuyg+2VRvdPy5A5F3MInYhLpko37cl+UyAw== boot@rio-jumpbox    
