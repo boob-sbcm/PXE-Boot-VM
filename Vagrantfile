@@ -30,21 +30,24 @@ Vagrant.configure(2) do |config|
     config.vm.define "build_master", autostart: false do |build_boot|
         small(config)
         build_boot.vm.box = $cent_box
-        build_boot.vm.hostname = "gemini-build-master"
+        build_boot.vm.hostname = "gemini-master"
         build_boot.vm.network "private_network", ip: "192.168.2.2", virtualbox__intnet: "prov"
         build_boot.vm.provision :shell, path: "provision_scripts/general.sh"
         build_boot.vm.provision :shell, path: "provision_scripts/dhcp.sh"
         build_boot.vm.provision :shell, path: "provision_scripts/tftp.sh"
         build_boot.vm.provision :shell, path: "provision_scripts/apache.sh"
+        build_boot.vm.provision :shell, path: "provision_scripts/make_ssh_key.sh", privileged: false
+        build_boot.vm.provision :shell, path: "provision_scripts/copy_ssh_key.sh"
     end
-
+   
     config.vm.define "master", autostart: true do |boot|
         small(config)
 
         boot.vm.box = "gemini_master"
-        boot.vm.hostname = "master"
+        boot.vm.hostname = "gemini-master"
         boot.vm.network "private_network", ip: "192.168.2.2", virtualbox__intnet: "prov"
-        boot.vm.synced_folder "netboot/", "/netboot/" 
+        boot.vm.provision :shell, path: "provision_scripts/services.sh"
+
     end
 
 end
