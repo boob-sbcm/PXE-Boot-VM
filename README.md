@@ -1,27 +1,27 @@
-#Vagrant PXE Boot Machine 
+#Gemini PXE Boot Machine 
 
 ##**Steps**
 1. Create "build" images
 2. Package "build" images
 3. Add image to vagrant
-4. Have a pxe VM ready to go 
+4. Gemini Env Ready
 
 ##Setup
 
 - Create the master image. (It sets up dhcp, apache, tftp)
 
-    `vagrant up build_boot`
+    `vagrant up build_master`
 
 - Package up the current image
 
     ```
-    vagrant package build_boot --output <storage_path>/pxe_boot.box
+    vagrant package build_master --output <storage_path>/gemini_master.box
     ```
     
 - Add to vagrant's box list
     
     ```
-    vagrant box add pxe_boot <storage_path>/pxe_boot.box
+    vagrant box add pxe_boot <storage_path>/gemini_master.box
     ```
     
 - Destroys the build boxes
@@ -32,27 +32,13 @@
     
     `vagrant up`
 
-##Test PXE
+##Bring up machines
 
-1. Create a blank VM
-2. Enable Network Boot
+    ```./cluster.sh -c 3 -n```
     
-    a. System Settings -> Motherboard -> Boot Order (Check Network)
-3. Update Network Interfaces
-    
-    a. Network Settings -> Adapter 1: 
-        
-        - Internal Network
-        
-        - Name : prov
-    
-    b. Network Settings -> Adapter 2:
-        
-        - NAT Network
-        
-        - Name: NAT Network
-4. Start Machine : Will PXE boot and install Ubuntu onto the disk
-5. Credentials: ubuntu/ubuntu
+- Brings up 3 machines, with NATNetwork enabled
 
-
-- You can find the PXE boot stuff at /tftpboot and the kickstart at /var/www/my_ks.cfg on the build node
+##Comments
+    
+- Will PXE boot CoreOS
+- Might need to restart created nodes because tftp timeouts with too many machines to provision.
