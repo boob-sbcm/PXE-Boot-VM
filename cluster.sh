@@ -6,19 +6,24 @@
 
 function usage {
   printf "-c <number> - Specifies how many clients to start up"
-  printf "-n: to activate NAT Network (default :false)"
+  printf "-n: to activate NAT Network (default: false)"
+  printf "-s: to start VM's on creation (default: false)"
   exit
 }
 
 nat=false
+start=false
 
-while getopts ":nc:" opt; do
+while getopts ":nsc:" opt; do
   case $opt in
     c)
       PXE_COUNT=$OPTARG
       ;;
     n)
       nat=true
+      ;;
+    s)
+      start=true
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -35,7 +40,7 @@ if [ $PXE_COUNT ]
   then
     for (( i=1; i <= $PXE_COUNT; i++ ))
       do
-        vmName="cluster-$i"
+        vmName="node-$i"
         mac=$(printf "%0.12x" "$i";);
         if [[ ! -e $vmName.vdi ]]; then # check to see if PXE vm already exists
             echo "deploying pxe: $i"
@@ -51,9 +56,10 @@ if [ $PXE_COUNT ]
               VBoxManage modifyvm $vmName --nic2 natnetwork --nicpromisc1 allow-all;
               VBoxManage modifyvm $vmName --nictype1 82540EM;
             fi
-
             
+            if $start ; then
             VBoxManage startvm $vmName --type headless;
+            fi
 
         fi
         echo $mac
