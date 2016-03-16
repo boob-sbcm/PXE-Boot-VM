@@ -1,7 +1,7 @@
 #If this box is not on your machine, vagrant up base and make that a base box. Then add that to vagrant
 #$box_name = "my_hashicorp_precise32"
 $box_name = "hashicorp/precise32"
-$cent_box = "cent6_minimal"
+$cent_box = "cent7_minimal"
 
 def small(config)
     config.vm.provider "virtualbox" do |v|
