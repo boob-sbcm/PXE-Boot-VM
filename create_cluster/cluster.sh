@@ -5,9 +5,9 @@
 ############
 
 function usage {
-  printf "-c <number> - Specifies how many clients to start up"
-  printf "-n: to activate NAT Network (default: false)"
-  printf "-s: to start VM's on creation (default: false)"
+  echo "-c <number> - Specifies how many clients to start up"
+  echo "-n: to activate NAT Network (default: false)"
+  echo "-s: to start VM's on creation (default: false)"
   exit
 }
 
@@ -25,7 +25,7 @@ while getopts ":nsc:" opt; do
     s)
       start=true
       ;;
-    \?)
+    *)
       echo "Invalid option: -$OPTARG" >&2
       usage
       ;;
