@@ -8,13 +8,15 @@ function usage {
   echo "-c <number> - Specifies how many clients to start up"
   echo "-n: to activate NAT Network (default: false)"
   echo "-s: to start VM's on creation (default: false)"
+  echo "-r: to remove any prior matching VMs before creation (default: false)"
   exit
 }
 
 nat=false
 start=false
+remove=false
 
-while getopts ":nsc:" opt; do
+while getopts ":rnsc:" opt; do
   case $opt in
     c)
       PXE_COUNT=$OPTARG
@@ -24,6 +26,9 @@ while getopts ":nsc:" opt; do
       ;;
     s)
       start=true
+      ;;
+    r)
+      remove=true
       ;;
     *)
       echo "Invalid option: -$OPTARG" >&2
@@ -41,6 +46,12 @@ if [ $PXE_COUNT ]
     for (( i=1; i <= $PXE_COUNT; i++ ))
       do
         vmName="node-$i"
+
+        if $remove ; then
+            VBoxManage controlvm $vmName poweroff
+            VBoxManage unregistervm $vmName --delete 
+        fi
+
         mac=$(printf "%0.12x" "$i";);
         if [[ ! -e $vmName.vdi ]]; then # check to see if PXE vm already exists
             echo "deploying pxe: $i"
@@ -53,8 +64,8 @@ if [ $PXE_COUNT ]
             VBoxManage modifyvm $vmName --nictype1 82540EM --macaddress1 $mac --nicspeed1 125000;
 
             if $nat ; then
-              VBoxManage modifyvm $vmName --nic2 natnetwork --nicpromisc1 allow-all;
-              VBoxManage modifyvm $vmName --nictype1 82540EM;
+              VBoxManage modifyvm $vmName --nic2 nat --nicpromisc2 allow-all;
+              VBoxManage modifyvm $vmName --nictype2 82540EM;
             fi
             
             if $start ; then
