@@ -34,9 +34,10 @@
 
 ##Bring up machines
 
-    ```./cluster.sh -c 3 -n```
+    ```./cluster.sh -c 3```
     
-- Brings up 3 machines, with NATNetwork enabled
+- Brings up 3 machines
+- use -h option to see all script args
 
 ##Comments
     
