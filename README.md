@@ -1,4 +1,10 @@
-#Gemini PXE Boot Machine 
+#Gemini Master 
+ - Gemini is an open source project started by [Daneyon Hansen] (https://github.com/danehans) which is focused around adding CoreOS support to the [kubernetes/contrib] (https://github.com/kubernetes/contrib) project.
+ - This repository creates the **_Gemini Master_** who will be conducting the installation of kubernetes on CoreOS nodes. These nodes will be called **_Managed Nodes_**.
+ - Managed Nodes fall into two categories
+   - **PXE Boot Managed Nodes**: Blank Machines started in virtualbox and put on the *prov* internal network and told to network boot.
+   - **Vagrant Boot Managed Nodes**: Base CoreOS machines also put on the *prov* internal network
+ - This Repository will only concern itself with the **_Gemini Master_** and the **_PXE Boot Managed Nodes_**
 
 ##**Steps**
 1. Create "build" images
