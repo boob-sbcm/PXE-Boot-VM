@@ -6,12 +6,16 @@
    - **Vagrant Boot Managed Nodes**: Base CoreOS machines also put on the *prov* internal network
  - This Repository will only concern itself with the **_Gemini Master_** and the **_PXE Boot Managed Nodes_**, **Vagrant Boot Managed Nodes** can be found on my [coreos-vagrant] (https://github.com/stephenrlouie/coreos-vagrant/tree/gemini) repo.
 
-High Level View: 
+##Demo
+- [Streaming Link] (https://cisco.webex.com/ciscosales/ldr.php?RCID=1685081ad9ff3361b1fcc68ceb24a282)
+- [Download Link] (https://cisco.webex.com/ciscosales/lsr.php?RCID=b3fc3aa5faa81d5b5c608cf7199521f9)
+
+##High Level View: 
 ![alt text] (https://github.com/stephenrlouie/gemini_images/blob/master/high-level.png "High Level View")
 
 - As you can see there are numerous roles the gemini master can assign to Managed Nodes, such as Kube Master, Kube Workers, or Etcd nodes. Each role is specified in the kubernetes/contrib file [inventory file] (https://github.com/kubernetes/contrib/blob/master/ansible/inventory.example.single_master).
 
-##**First time setup**
+##**Overview**
 1. Pull pre-requisite images / tars
 2. Create "build_master" image
 3. Package "build_master" images
@@ -27,7 +31,7 @@ High Level View:
    - These steps take up to 10 minutes to bring up the Gemini Master because we are yum updating, installing and configuring all the parts of the Gemini Master. By packaging up the image and adding it to Vagrant, the start up time goes from 10 minutes to 30 seconds. *It is highly recommended to package this build.*
 
 
-##First time Setup
+##First Time Setup
 1. Pull the cent image and tars required for Gemini Master (K8s tar, Flannel Tar)
  - **Time: 5 Minutes**
  
@@ -106,6 +110,36 @@ High Level View:
  - Lastly, run the setup.sh script to configure the cluster.
  
  `INVENTORY=inventory ./setup.sh --private-key ~/.ssh/ansible_rsa -u core`
+
+
+##Testing the Cluster
+1. ssh into the kube master node (whoever you assigned it to in your inventory file)
+2. Check nodes
+
+ `kubectl get nodes`
+
+3. Create file `web.yml` by copy pasting this [gist] (https://gist.github.com/danehans/cb744bd10084175ccc44)
+4. Create the pod, replication controller and service.
+ 
+ `sudo kubectl create -f web.yml`
+
+5. Check status of the pod, rc and service.
+
+ `kubectl get pod,rc,svc`
+ 
+ - Wait until the pod is in the *Running* state (can take up to 5 minutes)
+ ![alt text] (https://github.com/stephenrlouie/gemini_images/blob/master/curl_web.png)
+
+6. curl http://*"Service IP Address"* (As seen above)
+
+7. You can hit the web app from your favorite web browser if you expose the NAT port on the kube master node. 
+ 1. Right click on the kube_master VM in virtualbox 
+ 2. *Settings* -> *Network* -> *Port Forwarding*. (On the Adapter that is attached to *NAT*)
+ 3. Add a rule:
+    - Protocol: TCP
+    - Host Port: 3030
+    - Guest Port: 30302
+ 4. Open a web browser and go to `localhost:3030` or `http://127.0.0.1:3030`
 
 ##Refreshing Gemini Master
  1. If you **did** package the gemini_master. Repeat Steps: 6 -> END
